@@ -125,7 +125,48 @@ public partial class ThemeSettingViewModel : MyReactiveObject
         theme.SetBaseTheme(baseTheme);
         _paletteHelper.SetTheme(theme);
 
+        ApplyMonochromePalette();
+
         WindowsUtils.SetDarkBorder(Application.Current.MainWindow, CurrentTheme);
+    }
+
+    /// <summary>
+    /// Matixray default look: black / gray / white (used while the user has not picked a color of their own)
+    /// </summary>
+    private void ApplyMonochromePalette()
+    {
+        if (!_config.UiItem.ColorPrimaryName.IsNullOrEmpty())
+        {
+            return;
+        }
+
+        var theme = _paletteHelper.GetTheme();
+        var paper = theme.Paper;
+        var isDark = (paper.R * 299 + paper.G * 587 + paper.B * 114) / 1000 < 128;
+
+        var black = System.Windows.Media.Color.FromRgb(0, 0, 0);
+        var white = System.Windows.Media.Color.FromRgb(255, 255, 255);
+
+        if (isDark)
+        {
+            theme.PrimaryLight = new ColorPair(System.Windows.Media.Color.FromRgb(250, 250, 250), black);
+            theme.PrimaryMid = new ColorPair(System.Windows.Media.Color.FromRgb(238, 238, 238), black);
+            theme.PrimaryDark = new ColorPair(System.Windows.Media.Color.FromRgb(189, 189, 189), black);
+            theme.SecondaryLight = new ColorPair(System.Windows.Media.Color.FromRgb(189, 189, 189), black);
+            theme.SecondaryMid = new ColorPair(System.Windows.Media.Color.FromRgb(158, 158, 158), black);
+            theme.SecondaryDark = new ColorPair(System.Windows.Media.Color.FromRgb(117, 117, 117), white);
+        }
+        else
+        {
+            theme.PrimaryLight = new ColorPair(System.Windows.Media.Color.FromRgb(66, 66, 66), white);
+            theme.PrimaryMid = new ColorPair(System.Windows.Media.Color.FromRgb(33, 33, 33), white);
+            theme.PrimaryDark = new ColorPair(black, white);
+            theme.SecondaryLight = new ColorPair(System.Windows.Media.Color.FromRgb(117, 117, 117), white);
+            theme.SecondaryMid = new ColorPair(System.Windows.Media.Color.FromRgb(97, 97, 97), white);
+            theme.SecondaryDark = new ColorPair(System.Windows.Media.Color.FromRgb(66, 66, 66), white);
+        }
+
+        _paletteHelper.SetTheme(theme);
     }
 
     private void ModifyFontSize()

@@ -112,6 +112,11 @@ public static class ConfigHandler
                 : Global.Languages[2];
         }
 
+        if (config.UiItem.CurrentTheme.IsNullOrEmpty())
+        {
+            config.UiItem.CurrentTheme = nameof(ETheme.Dark);
+        }
+
         config.ConstItem ??= new ConstItem();
 
         config.SimpleDNSItem ??= InitBuiltinSimpleDNS();
