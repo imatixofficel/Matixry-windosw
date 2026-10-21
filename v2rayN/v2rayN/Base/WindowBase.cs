@@ -4,6 +4,15 @@ public class WindowBase<TViewModel> : ReactiveWindow<TViewModel> where TViewMode
 {
     public WindowBase()
     {
+        try
+        {
+            if (AppManager.Instance.Config.UiItem.CurrentLanguage == "fa")
+            {
+                FlowDirection = FlowDirection.RightToLeft;
+            }
+        }
+        catch { }
+
         Loaded += OnLoaded;
     }
 

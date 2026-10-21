@@ -198,6 +198,14 @@ public static class ConfigHandler
             config.SystemProxyItem.SystemProxyExceptions = Utils.IsWindows() ? Global.SystemProxyExceptionsWindows : Global.SystemProxyExceptionsLinux;
         }
 
+        // Matixray: Persian is the default language (applied once; the user can change it later in Settings)
+        if (!config.UiItem.MatixrayDefaultsApplied)
+        {
+            config.UiItem.MatixrayDefaultsApplied = true;
+            config.UiItem.CurrentLanguage = "fa";
+            _ = Task.Run(async () => await SaveConfig(config));
+        }
+
         return config;
     }
 

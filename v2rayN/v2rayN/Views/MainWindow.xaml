@@ -291,8 +291,8 @@
                                         <materialDesign:PackIcon
                                             Margin="{StaticResource MarginRight8}"
                                             VerticalAlignment="Center"
-                                            Kind="VolumeHigh" />
-                                        <TextBlock Text="{x:Static resx:ResUI.menuPromotion}" />
+                                            Kind="CloudDownload" />
+                                        <TextBlock x:Name="txtFreeConfigs" Text="Free configs" />
                                     </StackPanel>
                                 </MenuItem.Header>
                             </MenuItem>

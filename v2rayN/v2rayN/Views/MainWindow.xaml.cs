@@ -25,6 +25,7 @@ public partial class MainWindow
         PreviewKeyDown += MainWindow_PreviewKeyDown;
         menuSettingsSetUWP.Click += MenuSettingsSetUWP_Click;
         menuPromotion.Click += MenuPromotion_Click;
+        txtFreeConfigs.Text = FreeConfigsWindow.MenuTitle;
         menuClose.Click += MenuClose_Click;
         menuCheckUpdate.Click += MenuCheckUpdate_Click;
         btnNewUpdate.Click += MenuCheckUpdate_Click;
@@ -244,9 +245,19 @@ public partial class MainWindow
         ShowHideWindow(false);
     }
 
+    private FreeConfigsWindow? _freeConfigsWindow;
+
     private void MenuPromotion_Click(object sender, RoutedEventArgs e)
     {
-        ProcUtils.ProcessStart($"{Utils.Base64Decode(Global.PromotionUrl)}?t={DateTime.Now.Ticks}");
+        if (_freeConfigsWindow is { IsLoaded: true })
+        {
+            _freeConfigsWindow.Activate();
+            return;
+        }
+
+        _freeConfigsWindow = new FreeConfigsWindow(ViewModel?.ProfilesViewModel) { Owner = this };
+        _freeConfigsWindow.Closed += (_, _) => _freeConfigsWindow = null;
+        _freeConfigsWindow.Show();
     }
 
     private void MenuSettingsSetUWP_Click(object sender, RoutedEventArgs e)
