@@ -12,8 +12,28 @@ permissions:
   contents: write
 
 jobs:
+  check:
+    name: check tag
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.t.outputs.tag }}
+    steps:
+    - name: Check release tag
+      id: t
+      env:
+        RAW: ${{ inputs.release_tag }}
+      run: |
+        TAG="$(printf '%s' "$RAW" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+        echo "Tag typed: [$RAW]"
+        if ! printf '%s' "$TAG" | grep -Eq '^[A-Za-z0-9][A-Za-z0-9._-]*$'; then
+          echo "::error::The release tag [$TAG] is not valid. Use only English letters, numbers, dot, dash or underscore, with no spaces. Example: V1.0.0"
+          exit 1
+        fi
+        echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
   build:
     name: build ${{ matrix.arch }}
+    needs: check
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -88,7 +108,7 @@ jobs:
 
   release:
     name: upload to release
-    needs: build
+    needs: [check, build]
     runs-on: ubuntu-latest
     steps:
     - name: Collect zips
@@ -102,7 +122,7 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
         REPO: ${{ github.repository }}
-        TAG: ${{ inputs.release_tag }}
+        TAG: ${{ needs.check.outputs.tag }}
       run: |
         ls -la dist
         if ! gh release view "$TAG" --repo "$REPO" > /dev/null 2>&1; then
