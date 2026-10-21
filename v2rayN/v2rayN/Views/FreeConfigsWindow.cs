@@ -170,25 +170,25 @@ public sealed class FreeConfigsWindow : Window
             _grid.Style = style;
         }
 
-        _grid.Columns.Add(new DataGridTextColumn
+        _grid.Columns.Add(new System.Windows.Controls.DataGridTextColumn
         {
             Header = T("نام", "Name"),
             Binding = new Binding(nameof(FreeConfigRow.Remarks)),
             Width = new DataGridLength(2, DataGridLengthUnitType.Star),
         });
-        _grid.Columns.Add(new DataGridTextColumn
+        _grid.Columns.Add(new System.Windows.Controls.DataGridTextColumn
         {
             Header = T("آدرس", "Address"),
             Binding = new Binding(nameof(FreeConfigRow.Address)),
             Width = new DataGridLength(2, DataGridLengthUnitType.Star),
         });
-        _grid.Columns.Add(new DataGridTextColumn
+        _grid.Columns.Add(new System.Windows.Controls.DataGridTextColumn
         {
             Header = T("پروتکل", "Protocol"),
             Binding = new Binding(nameof(FreeConfigRow.Protocol)),
             Width = new DataGridLength(1, DataGridLengthUnitType.Star),
         });
-        _grid.Columns.Add(new DataGridTextColumn
+        _grid.Columns.Add(new System.Windows.Controls.DataGridTextColumn
         {
             Header = T("تأخیر", "Delay"),
             Binding = new Binding(nameof(FreeConfigRow.DelayText)),

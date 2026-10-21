@@ -130,6 +130,19 @@ public partial class ThemeSettingViewModel : MyReactiveObject
         WindowsUtils.SetDarkBorder(Application.Current.MainWindow, CurrentTheme);
     }
 
+    private static bool IsSystemDark()
+    {
+        try
+        {
+            using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+            return key?.GetValue("AppsUseLightTheme") is int value && value == 0;
+        }
+        catch
+        {
+            return true;
+        }
+    }
+
     /// <summary>
     /// Matixray default look: black / gray / white (used while the user has not picked a color of their own)
     /// </summary>
@@ -141,8 +154,12 @@ public partial class ThemeSettingViewModel : MyReactiveObject
         }
 
         var theme = _paletteHelper.GetTheme();
-        var paper = theme.Paper;
-        var isDark = (paper.R * 299 + paper.G * 587 + paper.B * 114) / 1000 < 128;
+        var isDark = CurrentTheme switch
+        {
+            nameof(ETheme.Dark) => true,
+            nameof(ETheme.Light) => false,
+            _ => IsSystemDark(),
+        };
 
         var black = System.Windows.Media.Color.FromRgb(0, 0, 0);
         var white = System.Windows.Media.Color.FromRgb(255, 255, 255);
